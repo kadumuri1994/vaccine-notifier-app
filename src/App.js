@@ -1,41 +1,53 @@
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'
 import moment from 'moment'
-import notifier from './notifier'
+import { send } from 'emailjs-com'
+import {DISTRICTS, SERVICE_ID, TEMPLATE_ID, USER_ID, POLL_TIME} from './constants'
 
 function App() {
   return (
     <div className="App">
+      <div>Click on the below button to check availability and notify for any available slots</div>
       <button onClick={checkAvailability}>Check Availability</button>
     </div>
   );
 }
 
-async function checkAvailability() {
-  let datesArray = await fetchNext10Days();
-  datesArray.forEach(date => {
-      getSlotsForDate(date);
-  })
+function checkAvailability() {
+  setInterval(() => {
+    let datesArray = fetchNext7Days();
+    datesArray.forEach(date => {
+        getSlotsForDate(date);
+    })
+  }, POLL_TIME * 60 * 1000)
 }
 
-function getSlotsForDate(DATE) {
-  let districts = [681, 703]
-  districts.forEach(district => {
+function getSlotsForDate(date) {
+  DISTRICTS.forEach(district => {
   let config = {
       method: 'get',
-      url: 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=' + district + '&date=' + DATE,
-      headers: {
-          'accept': 'application/json',
-          'Accept-Language': 'hi_IN'
-      }
+      url: '/api/v2/appointment/sessions/public/calendarByDistrict?district_id=' + district + '&date=' + date,
   };
 
   axios(config)
-      .then(function (slots) {
-          let sessions = slots.data.sessions;
-          let validSlots = sessions.filter(slot => slot.min_age_limit <= 26 &&  slot.available_capacity > 0)
-          console.log({date:DATE, validSlots: validSlots.length})
+      .then(function (resp) {
+          let centers = resp.data.centers
+          let validSlots = []
+          for(let i = 0; i < centers.length; i++) {
+            let center = centers[i]
+            let sessions = center.sessions
+            for(let j = 0; j < sessions.length; j++) {
+              let session = sessions[j]
+              if(session.min_age_limit <= AGE && session.available_capacity > 0) {
+                validSlots.push({
+                  district_name: center.district_name,
+                  block_name: center.block_name,
+                  available_capacity: session.available_capacity,
+                  date: session.date,
+                })
+              }
+            }
+          }
           if(validSlots.length > 0) {
               notifyMe(validSlots);
           }
@@ -46,10 +58,10 @@ function getSlotsForDate(DATE) {
   })
 }
 
-async function fetchNext10Days(){
+function fetchNext7Days(){
   let dates = [];
   let today = moment();
-  for(let i = 0 ; i < 10 ; i ++ ){
+  for(let i = 0 ; i < 7 ; i ++ ){
       let dateString = today.format('DD-MM-YYYY')
       dates.push(dateString);
       today.add(1, 'day');
@@ -59,12 +71,21 @@ async function fetchNext10Days(){
 
 function notifyMe(validSlots){
   let slotDetails = JSON.stringify(validSlots, null, '\t');
-  console.log(slotDetails)
-  notifier.sendEmail('vamshi1000@gmail.com', 'VACCINE AVAILABLE', slotDetails, (err, result) => {
-      if(err) {
-          console.error({err});
-      }
-  })
+  send(
+    SERVICE_ID,
+    TEMPLATE_ID,
+    {
+      from_name: 'Vaccine Notifier App',
+      message: slotDetails
+    },
+    USER_ID
+  )
+    .then((response) => {
+      console.log('SUCCESS!', response.status, response.text);
+    })
+    .catch((err) => {
+      console.log('FAILED...', err);
+    });
 };
 
 export default App;
