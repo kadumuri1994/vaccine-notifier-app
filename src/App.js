@@ -15,10 +15,9 @@ function App() {
 
 function checkAvailability() {
   setInterval(() => {
-    let datesArray = fetchNext7Days();
-    datesArray.forEach(date => {
-      getSlotsForDate(date);
-    })
+    let today = moment()
+    let date = today.format('DD-MM-YYYY')
+    getSlotsForDate(date);
   }, POLL_TIME * 60 * 1000)
 }
 
@@ -58,17 +57,6 @@ function getSlotsForDate(date) {
         console.log(error);
       });
   })
-}
-
-function fetchNext7Days() {
-  let dates = [];
-  let today = moment();
-  for (let i = 0; i < 7; i++) {
-    let dateString = today.format('DD-MM-YYYY')
-    dates.push(dateString);
-    today.add(1, 'day');
-  }
-  return dates;
 }
 
 function notifyMe(validSlots) {
