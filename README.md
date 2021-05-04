@@ -1,4 +1,9 @@
-# Vaccine Notifier App 
+# Vaccine Notifier App
+
+This application is essentially aimed to help people who are facing hard time in booking their slots for covid vaccination in India. After complete setup (follow below steps), you will be able to receive email notifications on the availability slots (if any) for that day and upcoming days based upon the configurations performed in the code related to districts and age.
+
+Note that this app can run only on dev environment. 
+Note that any API changes on the server environment in future can potentially break this implementation.
 
 ## EmailJS configuration
 
