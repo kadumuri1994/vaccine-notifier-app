@@ -2,7 +2,7 @@ import './App.css';
 import axios from 'axios'
 import moment from 'moment'
 import { send } from 'emailjs-com'
-import {DISTRICTS, SERVICE_ID, TEMPLATE_ID, USER_ID, POLL_TIME} from './constants'
+import {DISTRICTS, SERVICE_ID, TEMPLATE_ID, USER_ID, POLL_TIME, AGE} from './constants'
 
 function App() {
   return (
