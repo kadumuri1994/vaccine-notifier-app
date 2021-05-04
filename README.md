@@ -17,7 +17,7 @@
 - Clone the project using following command: 'git clone https://github.com/kadumuri1994/vaccine-notifier-app.git'
 - Navigate to the 'vaccine-notifier-app\src\constansts.js' and update the values of service id, template id and user id values. Also set the district ids for which you want the vaccine slots to check.
 
-![constantsfile_vaccine_notifier](https://user-images.githubusercontent.com/36915315/117056609-24ada400-ad3a-11eb-8912-e049e79e90d3.png)
+    ![constantsfile_vaccine_notifier](https://user-images.githubusercontent.com/36915315/117056609-24ada400-ad3a-11eb-8912-e049e79e90d3.png)
 
 - Installation
     ```sh
