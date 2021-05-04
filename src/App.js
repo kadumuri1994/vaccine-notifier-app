@@ -41,6 +41,8 @@ function getSlotsForDate(date) {
             if (session.min_age_limit <= AGE && session.available_capacity > 0) {
               validSlots.push({
                 district_name: center.district_name,
+                name: center.name,
+                pincode: center.pincode,
                 block_name: center.block_name,
                 available_capacity: session.available_capacity,
                 date: session.date,
