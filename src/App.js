@@ -1,24 +1,38 @@
 import './App.css';
+import { useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import { send } from 'emailjs-com'
 import { DISTRICTS, SERVICE_ID, TEMPLATE_ID, USER_ID, POLL_TIME, AGE } from './constants'
 
 function App() {
+  const [isSubscribed, setIsSubscribed] = useState(false)
+
+  function checkAvailability() {
+    setIsSubscribed(true)
+    setInterval(() => {
+      let today = moment()
+      let date = today.format('DD-MM-YYYY')
+      getSlotsForDate(date);
+    }, POLL_TIME * 60 * 1000)
+  }
+
   return (
     <div className="App">
-      <div>Click on the below button to check availability and notify for any available slots</div>
-      <button onClick={checkAvailability}>Check Availability</button>
+      <div>
+        <h4>
+          Click below to subscribe the slot availability on your email
+        </h4>
+      </div>
+      <div>
+        <button onClick={checkAvailability} disabled={isSubscribed}>Check Availability</button>
+      </div>
+      <div>
+        {isSubscribed && <p>Subscribed!</p>}
+      </div>
+
     </div>
   );
-}
-
-function checkAvailability() {
-  setInterval(() => {
-    let today = moment()
-    let date = today.format('DD-MM-YYYY')
-    getSlotsForDate(date);
-  }, POLL_TIME * 60 * 1000)
 }
 
 function getSlotsForDate(date) {
@@ -50,17 +64,17 @@ function getSlotsForDate(date) {
           }
         }
         if (validSlots.length > 0) {
-          notifyMe(validSlots);
+          notifyMe(validSlots)
         }
       })
       .catch(function (error) {
         console.log(error);
-      });
+      })
   })
 }
 
 function notifyMe(validSlots) {
-  let slotDetails = JSON.stringify(validSlots, null, '\t');
+  let slotDetails = JSON.stringify(validSlots, null, '\t')
   send(
     SERVICE_ID,
     TEMPLATE_ID,
@@ -71,11 +85,11 @@ function notifyMe(validSlots) {
     USER_ID
   )
     .then((response) => {
-      console.log('SUCCESS!', response.status, response.text);
+      console.log('SUCCESS!', response.status, response.text)
     })
     .catch((err) => {
-      console.log('FAILED...', err);
-    });
-};
+      console.log('FAILED...', err)
+    })
+}
 
 export default App;
