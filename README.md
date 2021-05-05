@@ -2,8 +2,9 @@
 
 This application is essentially aimed to help people who are facing hard time in booking their slots for covid vaccination in India. After complete setup (follow below steps), you will be able to receive email notifications on the availability slots (if any) for that day and upcoming days based upon the configurations performed in the code related to districts and age.
 
-Note that this app can run only on dev environment. 
-Note that any API changes on the server environment in future can potentially break this implementation.
+- Note that this app can run only on dev environment.
+- Note that any API changes on the server environment in future can potentially break this implementation.
+- Note that the API might return 403 Forbidden response if connected to certain VPNs in other countries
 
 ## EmailJS configuration
 
@@ -15,7 +16,7 @@ Note that any API changes on the server environment in future can potentially br
 
 ![image](https://user-images.githubusercontent.com/36915315/117041977-0a1eff00-ad29-11eb-8c67-b2567c5aef6e.png)
 
-[PS: Note that there is a limit of number of emails this service can send, so please ensure to set the age under 45 in the next steps, to get notified minimally]
+[PS: Note that there is a limit of number of emails this service can send, so please use wisely]
 
 ### Project Configuration (Windows)
 - Enusre GIT and Node are installed on your machine
